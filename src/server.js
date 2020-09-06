@@ -14,7 +14,14 @@ const urlStruct = {
 };
 
 const onRequest = (request, response) => {
+  const parsedURL = url.parse(request.url);
+  const params = query.parse(parsedURL.query);
 
+  if(urlStruct[parsedURL.pathname]) {
+    urlStruct[parsedURL.pathname](request, response, params);
+  } else {
+    urlStruct.notFound(request, response, params);
+  }
 };
 
 http.createServer(onRequest).listen(port);
